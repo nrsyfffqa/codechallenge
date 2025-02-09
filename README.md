@@ -25,32 +25,21 @@ Prerequisites:
 3. Environment Configuration:
 cp .env.example .env
 (Update the database settings inside .env)
-4. Generate Application Key:
-php artisan key:generate
-5. Run Database Migrations:
-php artisan migrate
-6. Run the Application:
+4. Run the Application:
 php artisan serve
+
 Visit http://127.0.0.1:8000 in your browser.
+
 Uploading Student Data:
 1. Login as a Teacher.
 2. Navigate to 'Upload Student Data'.
 3. Select an Excel file (.xlsx, .xls).
 4. Click 'Upload'.
 5. The system automatically skips duplicates.
+
 Search & Filter Students:
 1. Go to the student list page.
 2. Use the Search Bar to find students by name or class.
 3. Use the Filter Dropdown to filter students by class
 
-## Code of Conduct
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
