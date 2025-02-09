@@ -52,8 +52,9 @@ class StudentController extends Controller
 
         $newEntries = 0;
         $skippedEntries = 0;
+        $errors = [];
 
-        foreach ($worksheet->getRowIterator(2) as $row) { // Skip headers
+        foreach ($worksheet->getRowIterator(2) as $rowIndex => $row) { // Skip headers
             $cells = $row->getCellIterator();
             $cells->setIterateOnlyExistingCells(false);
 
@@ -62,34 +63,62 @@ class StudentController extends Controller
                 $data[] = $cell->getValue();
             }
 
-            if (count($data) >= 4) {
-                $name = trim($data[0]);
-                $class = trim($data[1]);
-                $level = trim($data[2]);
-                $parentContact = trim($data[3]);
+            $name = trim($data[0] ?? '');
+            $class = trim($data[1] ?? '');
+            $level = trim($data[2] ?? '');
+            $parentContact = trim($data[3] ?? '');
 
-                // Check if the student already exists
-                $exists = Student::where([
-                    ['name', '=', $name],
-                    ['class', '=', $class],
-                    ['level', '=', $level],
-                    ['parent_contact', '=', $parentContact]
-                ])->exists();
+            // Validation rules
+            if (empty($name) || empty($class) || empty($level) || empty($parentContact)) {
+                $errors[] = "Row $rowIndex: All fields must be filled.";
+                continue;
+            }
 
-                if (!$exists) {
-                    Student::create([
-                        'name' => $name,
-                        'class' => $class,
-                        'level' => $level,
-                        'parent_contact' => $parentContact,
-                    ]);
-                    $newEntries++;
-                } else {
-                    $skippedEntries++;
-                }
+            if (strlen($name) > 100) {
+                $errors[] = "Row $rowIndex: Name must not exceed 100 characters.";
+                continue;
+            }
+            
+            if (!is_string($class)) {
+                $errors[] = "Row $rowIndex: Class must be a valid string.";
+                continue;
+            }
+            
+            if (!is_numeric($level) || $level < 1 || $level > 6) {
+                $errors[] = "Row $rowIndex: Level must be an integer between 1 and 6.";
+                continue;
+            }
+            
+            if (!preg_match('/^\d{10,11}$/', $parentContact)) {
+                $errors[] = "Row $rowIndex: Parent contact must be 10 or 11 digits.";
+                continue;
+            }
+
+            // Check if the student already exists
+            $exists = Student::where([
+                ['name', '=', $name],
+                ['class', '=', $class],
+                ['level', '=', $level],
+                ['parent_contact', '=', $parentContact]
+            ])->exists();
+
+            if (!$exists) {
+                Student::create([
+                    'name' => $name,
+                    'class' => $class,
+                    'level' => $level,
+                    'parent_contact' => $parentContact,
+                ]);
+                $newEntries++;
+            } else {
+                $skippedEntries++;
             }
         }
 
-        return back()->with('success', "Upload complete!  ");
+        if (!empty($errors)) {
+            return back()->withErrors($errors);
+        }
+
+        return back()->with('success', "Upload complete! $newEntries new records added, $skippedEntries skipped.");
     }
 }

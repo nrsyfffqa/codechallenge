@@ -18,4 +18,3 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/students/search', [StudentController::class, 'search'])->name('students.search');
 
 });
-

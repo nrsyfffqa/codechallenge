@@ -11,6 +11,16 @@
             </div>
         @endif
 
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <form action="{{ route('students.upload.post') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="mb-3">
@@ -19,9 +29,15 @@
                 <small class="form-text text-muted">Supported formats: .xlsx, .xls</small>
             </div>
             <div class="text-center">
-                <button type="submit" class="btn btn-success">Upload</button>
-                <a href="{{ url('/home') }}" class="btn btn-danger ms-2">Cancel</a>
-            </div>
+    <button type="submit" class="btn btn-success">Upload</button>
+    <button type="button" class="btn btn-danger ms-2" onclick="clearFileInput()">Cancel</button>
+</div>
+
+<script>
+    function clearFileInput() {
+        document.querySelector('input[name="file"]').value = '';
+    }
+</script>
         </form>
     </div>
 
@@ -52,31 +68,32 @@
         </div>
     </div>
 
-    <!-- Student Records -->
-    <div class="card">
-        <div class="card-header">Student Records</div>
-        <div class="card-body p-0">
-            <table class="table table-bordered">
-                <thead>
+ <!-- Student Records -->
+<div class="card">
+    <div class="card-header text-center"><strong>Student Records</strong></div>
+    <div class="card-body p-0">
+        <table class="table table-bordered text-center"> <!-- Add text-center here -->
+            <thead class="table-dark">
+                <tr>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Class</th>
+                    <th class="text-center">Level</th>
+                    <th class="text-center">Parent Contact</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($students as $student)
                     <tr>
-                        <th>Name</th>
-                        <th>Class</th>
-                        <th>Level</th>
-                        <th>Parent Contact</th>
+                        <td class="align-middle">{{ $student->name }}</td>
+                        <td class="align-middle">{{ $student->class }}</td>
+                        <td class="align-middle">{{ $student->level }}</td>
+                        <td class="align-middle">{{ $student->parent_contact }}</td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach ($students as $student)
-                        <tr>
-                            <td>{{ $student->name }}</td>
-                            <td>{{ $student->class }}</td>
-                            <td>{{ $student->level }}</td>
-                            <td>{{ $student->parent_contact }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                @endforeach
+            </tbody>
+        </table>
     </div>
 </div>
+
 @endsection
+  

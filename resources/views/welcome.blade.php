@@ -74,7 +74,7 @@
     <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <div class="card shadow-sm">
+                <div class="card shadow-sm">@vite(['resources/sass/app.scss', 'resources/js/app.js'])@vite(['resources/sass/app.scss', 'resources/js/app.js'])
                     <div class="card-body text-center">
                         <h3 class="mb-3">Get Started</h3>
                         <p class="text-muted">Log in to access student records, upload data, and manage your classroom effectively.</p>
@@ -82,10 +82,7 @@
                         <!-- Authentication Buttons -->
                         @if (Route::has('login'))
                             @auth
-                                <a href="{{ url('/dashboard') }}" class="btn btn-primary btn-custom">
-                                    <i class="fas fa-home"></i> Dashboard
-                                </a>
-                            @else
+                           
                                 <a href="{{ route('login') }}" class="btn btn-primary btn-custom">
                                     <i class="fas fa-sign-in-alt"></i> Log In
                                 </a>
